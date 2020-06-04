@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<link rel="stylesheet" href="fonts/icomoon/style.css">
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/magnific-popup.css">
+<link rel="stylesheet" href="css/jquery-ui.css">
+<link rel="stylesheet" href="css/owl.carousel.min.css">
+<link rel="stylesheet" href="css/owl.theme.default.min.css">
+<link rel="stylesheet" href="css/bootstrap-datepicker.css">
+<link rel="stylesheet" href="fonts/flaticon/font/flaticon.css">
+<link rel="stylesheet" href="css/aos.css">
+
+<link rel="stylesheet" href="css/style.css">
+
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+	integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+	crossorigin="anonymous">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+		<div class="col-md-3"></div>
+			<div class="col-md-6" style="border:solid 1px lightgray">
+			<center><h1>Add Post</h1></center>
+				<div class="alert" style="display: none;" role="alert" id="message">
+					
+				</div>
+
+				<div class="form-group">
+					<label for="exampleInputEmail1">Title</label> <input type="text"
+						class="form-control" id="title" aria-describedby="emailHelp"
+						placeholder="Enter Title">
+					<!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+				</div>
+				<div class="form-group">
+					<label for="exampleInputEmail1">Sub Title</label> <input
+						type="text" class="form-control" id="subtitle"
+						aria-describedby="emailHelp" placeholder="Enter Title">
+					<!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+				</div>
+				<div class="form-group">
+					<label for="exampleInputPassword1">Content</label>
+					<textarea class="form-control" id="content"
+						placeholder="Enter Content"></textarea>
+				</div>
+				<div class="row">
+				<div class="col-md-6"><div class="form-group">
+					<label for="exampleInputPassword1">Publish Date</label> <input
+						type="date" class="form-control" id="pdate">
+				</div></div>
+				<div class="col-md-6"><form id="fileUploadForm">
+					<div class="form-group">
+						<label for="exampleInputPassword1">Post Photo</label> <input
+							type="file" class="form-control" id="postImage"> <small
+							id="filename" class="form-text text-muted"></small>
+					</div>
+				</form></div>
+				</div>
+				
+				
+				<center><button type="submit" id="submitbtn" class="btn btn-primary">Submit</button></center>
+			<br>
+			</div>
+		</div>
+	</div>
+</body>
+
+
+
+<script>
+	$("#submitbtn").click(function() {
+		var origin = location.origin;
+
+		var data = new FormData();
+		var jsonDataObj = {
+			"title" : $("#title").val(),
+			"subTitle" : $("#subtitle").val(),
+			"content" : $("#content").val(),
+			"publishDate" : $("#pdate").val()
+		};
+		data.append("PostJSON", JSON.stringify(jsonDataObj));
+
+		var file = document.getElementById("postImage").files[0];
+
+		data.append("file", file);
+
+		$.ajax({
+			type : "POST",
+			enctype : 'multipart/form-data',
+			url : origin + "/rest/savePost",
+			data : data,
+			processData : false,
+			contentType : false,
+			cache : false,
+			timeout : 600000,
+			success : function(data) {
+				$("#message").show();
+				$("#message").text(data.message);
+				if (data.status = "Success") {
+					
+					$("#message").addClass("alert-success");
+					$("message").removeClass("alert-danger");
+				} else {
+					//$("#pmesssage")text("Failed....Try Again");
+					$("#message").removeClass("alert-success");
+					$("#message").addClass("alert-danger");
+				}
+
+			},
+			error : function(e) {
+				console.log("ERROR : ", e);
+
+			}
+		});
+
+	});
+</script>
+</html>
